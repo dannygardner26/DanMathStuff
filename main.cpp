@@ -4,7 +4,12 @@
 using namespace std;
 
 int main() {
-    cout << "C++ is working!" << endl;
-
-    return 0;
+   long long ans = 0;
+   for(long long i = 2; i < 2000000; i++){
+        if(isPrime(i)){
+            ans+=i;
+        }
+   }
+   cout<<ans;
 }
+
