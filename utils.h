@@ -88,4 +88,31 @@ vector<vector<int>> stringToGrid(string str, int n){
     return grid;
 }
 
+vector<vector<int>> stringToGrid(string str){
+    vector<int> flat;
+    istringstream iss(str);
+    int num;
+    while(iss >> num){
+        flat.push_back(num);
+    }
+    int n = sqrt(flat.size());
+    vector<vector<int>> grid(n, vector<int>(n));
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            grid[i][j] = flat[i * n + j];
+        }
+    }
+    return grid;
+}
+int numDivisors(long num){
+    unordered_map<long,long> myMap = toFrequencyMap(pFactorize(num));
+    int num = 1;
+    for(const auto& [key, value] : myMap){
+        if(myMap[key] != 0){
+            num *= (myMap[key]+1);
+        }
+    }
+    return num;
+}
+
 #endif
