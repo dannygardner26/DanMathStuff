@@ -104,15 +104,133 @@ vector<vector<int>> stringToGrid(string str){
     }
     return grid;
 }
-int numDivisors(long num){
+int numDivisors(long long num){
     unordered_map<long,long> myMap = toFrequencyMap(pFactorize(num));
-    int num = 1;
+    
+    long long ans = 1;
     for(const auto& [key, value] : myMap){
-        if(myMap[key] != 0){
-            num *= (myMap[key]+1);
+        if(value != 0){
+            ans *= (value+1);
         }
     }
-    return num;
+    return ans;
 }
+long long summate(long long a){
+    return (a*(a+1))/2;
+}
+long long collatz(long long runs, long long num, unordered_map<long long, long long> &master){
+    if(num <= 1){
+        return runs;
+    }
+    long long orig = num;
+    if(master.find(num) != master.end()){
+        return master[num] + runs;
+    }
+    if(num%2 == 0){
+        num/=2;
+    }else{
+        num= num*3+1;
+    }
+    long long res = collatz(runs+1, num, master);
+    master[orig] = res-runs;
+    return res;
+}
+vector<long long> longestCollatz(){
+    int maxRun = 0;
+    int maxVal = 0;
+    unordered_map<long long, long long> master;
+    for(long long i = 1 ; i <= 1000000; i++){
+        long long store = collatz(0,i,master);
+        
+        if(store > maxRun){
+            maxRun = store;
+            maxVal = i;
+        }
+    }
+    vector<long long> myAns = {maxRun, maxVal};
+    return myAns;
+}
+long long uniquePaths(long long n){
+    vector<vector<long long>> arr(n, vector<long long>(n,0));
+    arr[0][0] = 1;
+    for(int r = 0; r < n; r++){
+        for(int c = 0; c < n; c++){
+            
+            long long sum = 0;
+            if(c > 0){
+                sum += arr[r][c-1];
+            }
+            if(r > 0){
+                sum += arr[r-1][c];
+            }
+            arr[r][c] = sum;
+            if(c == 0 && r == 0){
+                arr[c][r] = 1;
+            }
+        }
+    }
+    return arr[n-1][n-1];
+}
+#include <bits/stdc++.h>
+using namespace std;
+
+string numToWords(int n) {
+    vector<string> below_20 = {"", "one", "two", "three", "four", "five", "six", "seven",
+                               "eight", "nine", "ten", "eleven", "twelve", "thirteen",
+                               "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
+                               "nineteen"};
+    vector<string> tens = {"", "", "twenty", "thirty", "forty", "fifty", "sixty",
+                           "seventy", "eighty", "ninety"};
+
+    if (n == 1000) return "one thousand";
+
+    if (n >= 100) {
+        int h = n / 100;
+        int r = n % 100;
+        if (r == 0)
+            return below_20[h] + " hundred";
+        else
+            // British usage: include "and"
+            return below_20[h] + " hundred and " + numToWords(r);
+    }
+
+    if (n >= 20) {
+        int t = n / 10;
+        int r = n % 10;
+        if (r == 0)
+            return tens[t];
+        else
+            return tens[t] + "-" + below_20[r];
+    }
+
+    return below_20[n];
+}
+
+int letterCountNoSpaceHyphen(const string &s) {
+    int cnt = 0;
+    for (char c : s) {
+        if (isalpha(static_cast<unsigned char>(c)))
+            ++cnt;
+    }
+    return cnt;
+}
+vector<vector<int>> parseLines(const string& str) {
+      vector<vector<int>> result;
+      istringstream lines(str);
+      string line;
+
+      while (getline(lines, line)) {
+          vector<int> row;
+          istringstream iss(line);
+          int num;
+          while (iss >> num) {
+              row.push_back(num);
+          }
+          if (!row.empty()) {
+              result.push_back(row);
+          }
+      }
+      return result;
+  }
 
 #endif
