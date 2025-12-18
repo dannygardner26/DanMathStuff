@@ -5,6 +5,9 @@
 #include <cmath>
 #include <unordered_map>
 #include <sstream>
+#include <unordered_set>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
 // Add your reusable helper functions here
@@ -19,12 +22,12 @@ struct TreeNode {
              TreeNode* r = nullptr)
         : value(v), left(l), right(r) {}
 };
-vector<long> pFactorize(long num){
-    vector<long> ans;
+vector<long long> pFactorize(long long num){
+    vector<long long> ans;
     for(int i = 2; i <= sqrt(num); i++){
         if(num % i == 0){
             ans.push_back(i);
-            vector<long> next = pFactorize(num/i);
+            vector<long long> next = pFactorize(num/i);
             ans.insert(ans.end(), next.begin(),next.end());
             return ans;
         }
@@ -34,16 +37,16 @@ vector<long> pFactorize(long num){
     } 
     return ans;
 }
-unordered_map<long, long> toFrequencyMap(const vector<long>& vec){
-    unordered_map<long, long> freq;
-    for(const long& item : vec){
+unordered_map<long long, long long> toFrequencyMap(const vector<long long>& vec){
+    unordered_map<long long, long long> freq;
+    for(const long long& item : vec){
         freq[item]++;
     }
     return freq;
 }
-void printVec(vector<long> &vec){
+void printVec(vector<long long> vec){
     cout<<endl;
-    for(int num : vec){
+    for(long long num : vec){
         cout << num<< ", ";
     }
     cout<<endl;
@@ -69,8 +72,8 @@ long nthPrime(int n){
 }
 
 int largestPrimeVal(int num){
-    unordered_map<long,long> master;
-    unordered_map<long,long> curr;
+    unordered_map<long long,long long> master;
+    unordered_map<long long,long long> curr;
     for(int i = 2; i < num; i++){
         curr = toFrequencyMap(pFactorize(i));
         for(auto& [key, val] : curr){
@@ -115,7 +118,7 @@ vector<vector<int>> stringToGrid(string str){
     return grid;
 }
 int numDivisors(long long num){
-    unordered_map<long,long> myMap = toFrequencyMap(pFactorize(num));
+    unordered_map<long long,long long> myMap = toFrequencyMap(pFactorize(num));
     
     long long ans = 1;
     for(const auto& [key, value] : myMap){
@@ -123,9 +126,41 @@ int numDivisors(long long num){
             ans *= (value+1);
         }
     }
+    
     return ans;
 }
-long long summate(long long a){
+long long sum(vector<long long> arr){
+    long long ans = 0;
+    for(long long num : arr){
+        ans+=num;
+    }
+    return ans;
+}
+vector<long long> listDivisors(long long num){
+    vector<long long> myVec = pFactorize(num);
+    unordered_set<long long> divisors;
+    divisors.insert(1);
+    for(int i = 0 ; i < myVec.size(); i++){
+        unordered_set<long long> load;
+        for(long long num : divisors){
+            load.insert(myVec[i]*num);
+        }
+        load.insert(myVec[i]);
+        for(long long n : load){
+            divisors.insert(n);
+        }
+    }
+    divisors.erase(num);
+    vector<long long> ans;
+    
+    for(long long num : divisors){
+        ans.push_back(num);
+    }
+    
+    return ans;
+
+}
+long long intSummation(long long a){
     return (a*(a+1))/2;
 }
 long long collatz(long long runs, long long num, unordered_map<long long, long long> &master){
@@ -273,6 +308,59 @@ int search(TreeNode* curr){
     }
     return curr->value + max(search(curr->left), search(curr->right));
 }
-  
+bool isAmicable(long long num){
+    
+        long long a = sum(listDivisors(num));
+        long long b = sum(listDivisors(a));
+        
+    
+    return (num == b && num != a);
+}
+long long Amicable(){
+    long long ans = 0;
+    unordered_set<long long> mySet;
+    for(long long i = 1; i <= 10000; i++){
+        if(isAmicable(i) && (mySet.find(i) == mySet.end())){
+            cout<<i<<"_";
+            ans += i;
+            mySet.insert(i);
+        }
+    }
+    cout<<endl;
+    return ans;
+}
+  vector<string> readNamesFromFile(const string& filename) {
+    ifstream file(filename);
+    vector<string> names;
+    string line;
 
+    if (!file.is_open()) {
+        return names; // return empty on error
+    }
+
+    // Read the line: "name","name2","name3"
+    if (getline(file, line)) {
+        stringstream ss(line);
+        string token;
+
+        // Split by comma
+        while (getline(ss, token, ',')) {
+            // Remove surrounding quotes if present
+            if (!token.empty() && token.front() == '"' && token.back() == '"') {
+                token = token.substr(1, token.size() - 2);
+            }
+            names.push_back(token);
+        }
+    }
+
+    return names;
+}
+long long lexValue(string &str){
+    long long ans = 0;
+    for(int i = 0 ; i < str.size(); i++){
+        
+        ans += str[i]-'A'+1;
+    }
+    return ans;
+}
 #endif
