@@ -2,9 +2,7 @@
 #include "utils.h"
 
 using namespace std;
-int search(vector<vector<int>> &arr, int row, int index){
-    if(row >= arr.size();
-}
+
 int main() {
     string str = R"(75
 95 64
@@ -22,7 +20,21 @@ int main() {
 63 66 04 68 89 53 67 30 73 16 69 87 40 31
 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23)";
     vector<vector<int>> arr = parseLines(str);
+string str2 = R"(3
+7 4
+2 4 6
+8 5 9 3)";
+vector<vector<int>> temp = parseLines(str2);
 
+    for(vector<int> vec: temp){
+        for(int num : vec){
+            cout<<num<<",";
+        }
+        cout<<endl;
+    }
+    TreeNode* aa = toTree(arr);
+    cout<<endl<<search(aa)<<endl;
+    // cout<<search(arr, 0, 0);
 
 
     return 0;

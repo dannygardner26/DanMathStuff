@@ -8,7 +8,17 @@
 using namespace std;
 
 // Add your reusable helper functions here
+struct TreeNode {
+    int value;
+    TreeNode* left;
+    TreeNode* right;
 
+    // Constructors
+    TreeNode(const int& v,
+             TreeNode* l = nullptr,
+             TreeNode* r = nullptr)
+        : value(v), left(l), right(r) {}
+};
 vector<long> pFactorize(long num){
     vector<long> ans;
     for(int i = 2; i <= sqrt(num); i++){
@@ -232,5 +242,37 @@ vector<vector<int>> parseLines(const string& str) {
       }
       return result;
   }
+  TreeNode* toTree(const vector<vector<int>> &arr) {
+    if (arr.empty()) return nullptr;
+
+    // 2D structure to hold pointers to created nodes
+    vector<vector<TreeNode*>> nodes(arr.size());
+
+    // create all nodes first
+    for (size_t r = 0; r < arr.size(); ++r) {
+        nodes[r].reserve(arr[r].size());
+        for (size_t c = 0; c < arr[r].size(); ++c) {
+            nodes[r].push_back(new TreeNode(arr[r][c]));
+        }
+    }
+
+    // link children: node(r,c) -> (r+1,c) and (r+1,c+1)
+    for (size_t r = 0; r + 1 < arr.size(); ++r) {
+        for (size_t c = 0; c < arr[r].size(); ++c) {
+            nodes[r][c]->left  = nodes[r + 1][c];
+            nodes[r][c]->right = nodes[r + 1][c + 1];
+        }
+    }
+
+    // root is top of triangle
+    return nodes[0][0];
+}
+int search(TreeNode* curr){
+    if(curr == nullptr){
+        return 0;
+    }
+    return curr->value + max(search(curr->left), search(curr->right));
+}
+  
 
 #endif
