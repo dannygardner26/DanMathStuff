@@ -51,6 +51,20 @@ void printVec(vector<long long> vec){
     }
     cout<<endl;
 }
+void printDec(vector<long long> vec, int len){
+    cout<<endl<<"0.";
+    for(int i = 0; i < len; i++){
+        cout<<vec[i];
+    }
+    cout<<endl;
+}
+void printDec(vector<long long> vec){
+    cout<<endl<<"0.";
+    for(long long num : vec){
+        cout << num;
+    }
+    cout<<endl;
+}
 bool isPrime(long num){
     if(num < 2) return false;
     for(int i = 2; i <= sqrt(num); i++){
@@ -362,5 +376,54 @@ long long lexValue(string &str){
         ans += str[i]-'A'+1;
     }
     return ans;
+}
+bool isAbundant(int num){
+    return sum(listDivisors(num)) > num;
+}
+void printVecStr(vector<string> arr){
+    cout<<endl;
+    for(string str : arr){
+        cout<<str<<", ";
+    }
+    cout<<endl;
+}
+vector<string> permute(vector<string> arr, string num){
+    vector<string> next;
+    for(string curr : arr){
+        
+        for(int i = 0; i <= curr.size(); i++){
+            string toAdd = curr;
+            toAdd.insert(i,num);
+            next.push_back(toAdd);
+        }
+
+    }
+    return next;
+
+}
+vector<string> genPermutes(vector<string> arr){
+    vector<string> ans = {arr[0]};
+    arr.erase(arr.begin());
+    for(string num : arr){
+        ans = permute(ans,num);
+    }
+    return ans;
+}
+int fib(int n)
+{
+    int f[6] = { 0, 1, 1, 2, 3, 5 };
+    double PHI = 1.6180339;
+    // Fiboncci numbers for n < 6
+    if (n < 6)
+        return f[n];
+
+    // Else start counting from
+    // 5th term
+    int t = 5, fn = 5;
+    while (t < n) {
+        fn = round(fn * PHI);
+        t++;
+    }
+    return fn;
 }
 #endif
