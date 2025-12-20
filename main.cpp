@@ -25,7 +25,8 @@ int detectCycle(vector<long long> &arr){
             arr[i+4] == 0 &&
             arr[i+5] == 0
             ){
-                cout<<endl<"0s"<<end;
+                cout<<"zero"<<endl;
+                break;
             }
         }
 
